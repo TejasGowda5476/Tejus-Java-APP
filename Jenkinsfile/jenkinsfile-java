@@ -1,33 +1,37 @@
 pipeline {
     agent any
-
     environment {
-        APP_NAME = "itc-fmcg"
-        RELEASE = "1.0.0"
-        DOCKER_USR = "devopsawsr"
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+        APP_NAME = "myapp"
+        RELEASE = "4.0"
+        DOCKER_USR = "devops5476"
+        DOCKERHUB_CREDENTIALS = credentials('kubernates')
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
-
     stages {
-        stage("git checkout") {
+        stage("checkout") {
             steps {
                 checkout scm
             }
         }
-        stage("Build") {
+        stage("scanner"){
+            steps {
+                sh "/opt/sonar-scanner/bin/sonar-scanner -X -Dproject.settings=sonar-project.properties"
+            }
+        }
+        stage("build") {
             steps {
                 sh "mvn clean package"
             }
         }
-        stage("Test") {
+        stage("test") {
             steps {
                 sh "mvn test"
-                sh "ls /var/lib/jenkins/workspace/${JOB_NAME}/webapp/target/"
+                sh "ls /var/lib/jenkins/workspace/${JOB_NAME}/"
             }
         }
-        stage("Build image") {
-            steps{
+        stage("build image") {
+            steps {
+                echo "Building Docker image with tag: ${IMAGE_TAG}"
                 sh "docker build -t ${DOCKER_USR}/${APP_NAME}:${IMAGE_TAG} ."
             }
         }
@@ -41,6 +45,5 @@ pipeline {
                 sh 'docker push ${DOCKER_USR}/${APP_NAME}:${IMAGE_TAG}'
             }
         }
-
     }
 }
