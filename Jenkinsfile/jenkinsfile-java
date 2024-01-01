@@ -4,7 +4,7 @@ pipeline {
         APP_NAME = "myapp1"
         RELEASE = "4.0"
         DOCKER_USR = "devops5476"
-        DOCKERHUB_CREDENTIALS = credentials('kubernates')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
     stages {
