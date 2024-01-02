@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: techapp
-        image: devopsawsr/myapp:4.0-3
+        image: devops5476/myapp1:4.0-6
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
